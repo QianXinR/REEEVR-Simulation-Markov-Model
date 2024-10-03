@@ -7,7 +7,7 @@
 
 # Load necessary libraries
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(readxl,BCEA,ggplot2,gtools,VGAM,mlmc,grid,Rcpp,doRNG)
+pacman::p_load(readxl,BCEA,ggplot2,gtools,VGAM,mlmc,grid,Rcpp,doRNG,voi)
 
 # Challenges and assumptions
 #' 1- The random numbers generate for drug costs are fairly close to each other, which might not be the case in real life
@@ -16,14 +16,10 @@ pacman::p_load(readxl,BCEA,ggplot2,gtools,VGAM,mlmc,grid,Rcpp,doRNG)
 #'  1.2- Generate state utility values in decreasing order, i.e., the more severer the health sate, the lower utility correlated.
 #'        The final health state(death) is assumed to have no associated utility.
 #' 2- Assumed patient cohort all start from health state 1, and the the cohort changes with each model cycle
-#' 3- Assumed no one die within the model time horizon (no survival data included)
-#'    How we want to handle the survival? UK life table?
-#' 5- Assumed the cycle length is one year, so no further calculation is conducted transferring utility to QALYs
-#' 6- Assumed no treatment discontinuation is considered, patients taking the treatments within the time horizon,
+#' 3- Assumed the cycle length is one year, so no further calculation is conducted transferring utility to QALYs
+#' 4- Assumed no treatment discontinuation is considered, patients taking the treatments within the time horizon,
 #     except when they moved into the last health states    
 
-# Load necessary functions from the package
-#devtools::load_all()
 
 #############################################################################
 ## Input parameters #########################################################
