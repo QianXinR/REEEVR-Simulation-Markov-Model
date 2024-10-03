@@ -1,3 +1,7 @@
+# REEEVR - Assessing reliability limits of regression and approximation methods for VoI estimation 
+# Develop a generic Markov model that can have any number of states and input parameters with varying level of correlation. 
+# Qian Xin October 2023
+
 # generate the transition matrices for each sample, each tx
 generate_transition_matrices <- function(input_parameters,n_samples,n_tx, n_states ) { # move this outside the function
   # Create a 3-dimensional array to store the transition matrices
