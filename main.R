@@ -1,3 +1,7 @@
+# REEEVR - Assessing reliability limits of regression and approximation methods for VoI estimation 
+# Develop a generic Markov model that can have any number of states and input parameters with varying level of correlation. 
+# Qian Xin October 2023
+
 # Set seed for random number generation
 #set.seed(45843)
 
