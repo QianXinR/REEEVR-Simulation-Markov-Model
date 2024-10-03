@@ -1,3 +1,6 @@
+# REEEVR - Assessing reliability limits of regression and approximation methods for VoI estimation 
+# Calculate EVPI use standard MC
+# Qian Xin October 2023
 
 calculate_EVPI <- function(results) {
   
