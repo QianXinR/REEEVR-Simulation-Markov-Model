@@ -1,4 +1,6 @@
-
+# REEEVR - Assessing reliability limits of regression and approximation methods for VoI estimation 
+# Develop a generic Markov model that can have any number of states and input parameters with varying level of correlation. 
+# Qian Xin October 2023
 
 EVPPI_MC <- function(M, N,treatment_costs_df, state_costs_df, state_utility_df, state_transition_matrices, 
                      uncertain_level = 100,  n_tx, n_cycles, n_states,hold_constant=c(), threshold = 25000){
