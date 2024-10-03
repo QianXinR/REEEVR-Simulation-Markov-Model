@@ -1,3 +1,7 @@
+# REEEVR - Assessing reliability limits of regression and approximation methods for VoI estimation 
+# Develop a generic Markov model that can have any number of states and input parameters with varying level of correlation. 
+# Qian Xin October 2023
+
 # Generate input parameters data with n_samples
 generate_input_parameters <- function(n_samples, treatment_costs_df, state_costs_df, state_utility_df,
 				 state_transition_matrices, hold_constant = c(), uncertain_level = 100) {
