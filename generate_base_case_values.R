@@ -89,7 +89,7 @@ generate_matrix <- function(n_states, uncertain_level) {
                    corMatrix = corMatrix, corstr = "cs" )
   
   # dt <- as.matrix(dt[, -1]) %*% corMatrix_normalised
-  dt <- as.data.table(cbind(id = 1:nrow(dt), dt))
+  # dt <- as.data.table(cbind(id = 1:nrow(dt), dt))
   
   ### create a long version of the data set
   
