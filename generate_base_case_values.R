@@ -82,10 +82,10 @@ generate_matrix <- function(n_states, uncertain_level) {
   corMatrix_normalised <- t(apply(corMatrix, 1, function(row) row / sum(row)))
   
   # Initialize an empty n x n matrix filled with zeros
-  mat <- matrix(0, n_states*n_states, n_states*n_states)
+  mat <- matrix(0, n_states, n_states)
   
   # Generate n_states*n_states observations of n_states RVs from a multivariate normal 
-  dt <- genCorData(n_states*n_states, mu = mu, sigma = 1, 
+  dt <- genCorData(1, mu = mu, sigma = 1, 
                    corMatrix = corMatrix, corstr = "cs" )
   
   # dt <- as.matrix(dt[, -1]) %*% corMatrix_normalised
@@ -109,6 +109,7 @@ generate_matrix <- function(n_states, uncertain_level) {
   
   mat <- as.matrix(dcast(data = dtM, id~seq,value.var = "Y_beta"))
   mat <- as.matrix(mat[, -1])
+  mat <- matrix(mat, nrow = n_states, ncol = n_states, byrow = TRUE)
   mat <- mat / rowSums(mat)
 
   # Update the last row to be all zeros, except the last element which will be uncertain_level
