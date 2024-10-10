@@ -345,34 +345,38 @@ EVPPI_prob_std_p <- function(M, N)
   return(NetB)
 }
 
-
+# Wrapper for  EVPPI_l_p
+## utility
 EVPPI_utility_l_p <- function(l = l,N = N) {
   return(EVPPI_l_p(l, N, EVPPI_std_p = EVPPI_utility_std_p))
 }
 
-
+## Costs
 EVPPI_cost_l_p <- function(l = l,N = N) {
   return(EVPPI_l_p(l, N, EVPPI_std_p = EVPPI_cost_std_p))
 }
 
-
+## transition probabilities
 EVPPI_prob_l_p <- function(l = l,N = N) {
   return(EVPPI_l_p(l, N, EVPPI_std_p = EVPPI_prob_std_p))
 }
 
 #set.seed(33)
-
+# EVPPI using MLMC
+## utility
 tst_utility <- mlmc.test(EVPPI_utility_l_p, N=1000,
                          L=4, N0=1000,
                          eps.v=c(60, 30, 15,7,3,1),
                          Lmin=2, Lmax=10)
 
 
+## Costs
 tst_cost <- mlmc.test(EVPPI_cost_l_p, N=1000,
                       L=4, N0=1000,
                       eps.v=c(60, 30, 15,7,3,1),
                       Lmin=2, Lmax=10)
 
+## transition probabilities
 tst_prob <- mlmc.test(EVPPI_prob_l_p, N=1000,
                       L=4, N0=1000,
                       eps.v=c(60, 30, 15,7,3,1),
