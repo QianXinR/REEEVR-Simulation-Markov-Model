@@ -103,7 +103,6 @@ evpi_estimate
 #############################################################################
 ## voi Analysis of results GP #################################################
 #############################################################################
-# method_used <- if (n_states > 4) "gp" else "gam"
 input_parameters2<-createInputs(input_parameters, print_is_linear_comb = TRUE)
 
 #utility
@@ -143,8 +142,6 @@ evppi_prob
 #############################################################################
 ## voi Analysis of results MARS #############################################
 #############################################################################
-# # method_used <- if (n_states > 4) "gp" else "gam"
-# input_parameters2<-createInputs(input_parameters, print_is_linear_comb = TRUE)
 
 #utility
 evppi_utility <- voi::evppi(
@@ -183,8 +180,6 @@ evppi_prob
 #############################################################################
 ## voi Analysis of results BART #############################################
 #############################################################################
-# method_used <- if (n_states > 4) "gp" else "gam"
-# input_parameters2<-createInputs(input_parameters, print_is_linear_comb = TRUE)
 
 #utility
 evppi_utility <- voi::evppi(
