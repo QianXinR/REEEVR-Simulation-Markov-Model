@@ -38,8 +38,6 @@ source("./EVPPI_l_p.R")
 
 run_locally = FALSE
 n_samples <- 1000
-n_states <- 3 
-n_tx <- 2
 n_cycles <- 30
 n_columns <- n_tx * n_states * (n_states-1) + 2*n_states + n_tx -2
 ##run_evppi_simulation <- function(n_states){
@@ -50,10 +48,11 @@ transition_names <- generate_column_names(n_states)
 
 
 # wrap evppi calculation in a function for later parallel 
-run_evppi_simulation <- function(n_states_var){
+run_evppi_simulation <- function(n_states_var, n_tx_var){
   
 	# random states Utility
 	n_states = n_states_var
+	n_tx = n_tx_var
 	state_utility_df <- generate_state_data(n_states, 1, "Utility", "descending")
 
 	# random states costs
@@ -441,16 +440,12 @@ if (run_locally == FALSE) {
   
   for (n_states in 3:10) {
     # Loop through n_states from 3 to 10
+    for (n_tx in 2:10) {  # Inner loop for n_tx from 2 to 10
+      
     input_values <- rep(n_states, save_window)
     
     for (iteration in 1:ceiling(num_sims / save_window)) {
-      print(paste(
-        "Running for n_states =",
-        n_states,
-        "using",
-        num_cores_to_use,
-        "cores"
-      ))
+      print(paste("Running for n_states =", n_states, "and n_tx =", n_tx, "using", num_cores_to_use, "cores"))
       
       c1 <- makeCluster(num_cores_to_use) # creates a cluster cores, allowing parallel execution on multiple CPU cores
       
@@ -469,7 +464,6 @@ if (run_locally == FALSE) {
       clusterExport(
         c1,
         c(
-          "n_tx",
           "n_samples",
           "n_cycles",
           "n_columns",
@@ -524,9 +518,11 @@ if (run_locally == FALSE) {
       stopCluster(c1)
       
     }
-  } else {
+  } }else {
     for (n_states in 3:10) {
-      run_evppi_simulation(n_states)  # run locally if run_locally is TRUE
+      for (n_tx in 2:10) {
+        run_evppi_simulation(n_states, n_tx)  # run locally if run_locally is TRUE
+      }
     }
   }
 }
