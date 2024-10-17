@@ -426,53 +426,110 @@ run_evppi_simulation <- function(n_states_var){
 
 }
 
-a <- run_evppi_simulation(3)
+# a <- run_evppi_simulation(3)
 
-if(run_locally == FALSE){
-	library(digest)
-	script_run_hash = digest(format(Sys.time(),"%Y%m%d%H%M%S") , algo='md5')
-	library(parallel)
-	num_sims = 2000 # can be changed
-	save_window = 100
-	input_values <- rep(n_states,save_window)
-	num_cores <- detectCores()/2 + 10
-	num_cores_to_use <- min(42, num_cores, detectCores()) # caution before change
-	
-	for (iteration in 1:ceiling(num_sims/save_window)){
-		print(paste("using ",num_cores_to_use, " cores"))
-		c1 <- makeCluster(num_cores_to_use)
-		# import my own libraries
-		clusterEvalQ(c1,source("./generate_base_case_values.R"))
-		clusterEvalQ(c1,source("./generate_net_benefit.R"))
-		clusterEvalQ(c1,source("./generate_input_parameters.R"))
-		clusterEvalQ(c1,source("./generate_transition_matrix.R"))
-		# import external libraries
 
-		#clusterEvalQ(c1, {library(MCMCpack)})
-		clusterExport(c1, c("n_tx","n_samples","n_cycles","n_columns","state_names","tx_names","transition_names"))
-		clusterExport(c1, c('n_states'))
-		clusterExport(c1, c("rdirichlet",'rdiric','bcea','createInputs','evppi')) # n_states is defined as global var, not right, to be fixed
-		clusterExport(c1, c("run_evppi_simulation",'input_values'))
-		results <- parLapply(c1, input_values, run_evppi_simulation)
-		# spprnf nre trdulyd
-		if(iteration==1){
-			df_results <- do.call(rbind, results)
-		}
-		else{
-			df_results_temp <- do.call(rbind, results) # create df for this saving window
-			df_results <- rbind(df_results, df_results_temp) # create full dataframe
-		}
-		print(df_results)
-		time_code <-  format(Sys.time(), "%Y%m%d%H%M%S")
-		file_path <- paste('./results_folder/results_',script_run_hash,'_',n_states,'_',time_code,'.csv')
-		file_path <- gsub("\\s+","",file_path)
-		write.csv(df_results, file = file_path, row.names = FALSE)
-		message <- paste(iteration, '.',save_window*iteration,'/',num_sims,' jobs completed, job hash: ', script_run_hash)
-		print(message)
-	}} else {
-	run_evppi_simulation(n_states)
+if (run_locally == FALSE) {
+  library(digest)
+  script_run_hash = digest(format(Sys.time(), "%Y%m%d%H%M%S") , algo = 'md5')
+  library(parallel)
+  num_sims = 2000 # can be changed
+  save_window = 100
+  input_values <- rep(n_states, save_window)
+  num_cores <- detectCores() / 2 + 10 #number of CPU cores available on the machine
+  num_cores_to_use <- min(42, num_cores, detectCores()) # capped the number of cores at 42 to avoid overloading the system
+  
+  for (n_states in 3:10) {
+    # Loop through n_states from 3 to 10
+    input_values <- rep(n_states, save_window)
+    
+    for (iteration in 1:ceiling(num_sims / save_window)) {
+      print(paste(
+        "Running for n_states =",
+        n_states,
+        "using",
+        num_cores_to_use,
+        "cores"
+      ))
+      
+      c1 <- makeCluster(num_cores_to_use) # creates a cluster cores, allowing parallel execution on multiple CPU cores
+      
+      # import my own libraries
+      clusterEvalQ(c1, source("./generate_base_case_values.R"))
+      clusterEvalQ(c1, source("./generate_net_benefit.R"))
+      clusterEvalQ(c1, source("./generate_input_parameters.R"))
+      clusterEvalQ(c1, source("./generate_transition_matrix.R"))
+      clusterEvalQ(c1, source("./EVPPI_MC.R"))
+      clusterEvalQ(c1, source("./calculate_EVPI.R"))
+      clusterEvalQ(c1, source("./EVPPI_l_p.R"))
+      
+      # import external libraries
+      
+      #clusterEvalQ(c1, {library(MCMCpack)})
+      clusterExport(
+        c1,
+        c(
+          "n_tx",
+          "n_samples",
+          "n_cycles",
+          "n_columns",
+          "state_names",
+          "tx_names",
+          "transition_names"
+        )
+      )
+      clusterExport(c1, c('n_states'))
+      clusterExport(c1,
+                    c("rdirichlet", 'rdiric', 'bcea', 'createInputs', 'evppi')) # n_states is defined as global var, not right, to be fixed
+      clusterExport(c1, c("run_evppi_simulation", 'input_values'))
+      results <- parLapply(c1, input_values, run_evppi_simulation)
+      
+      # bind the results together
+      if (iteration == 1) {
+        df_results <- do.call(rbind, results)
+      } else {
+        df_results_temp <- do.call(rbind, results)
+        df_results <- rbind(df_results, df_results_temp)
+      }
+      
+      print(df_results)
+      
+      # save results to a CSV file
+      time_code <- format(Sys.time(), "%Y%m%d%H%M%S")
+      file_path <- paste0(
+        './results_folder/results_',
+        script_run_hash,
+        '_',
+        n_states,
+        '_',
+        time_code,
+        '.csv'
+      )
+      write.csv(df_results,
+                file = gsub("\\s+", "", file_path),
+                row.names = FALSE)
+      
+      message <- paste(
+        iteration,
+        '.',
+        save_window * iteration,
+        '/',
+        num_sims,
+        'jobs completed, job hash:',
+        script_run_hash
+      )
+      print(message)
+      
+      # Stop the cluster
+      stopCluster(c1)
+      
+    }
+  } else {
+    for (n_states in 3:10) {
+      run_evppi_simulation(n_states)  # run locally if run_locally is TRUE
+    }
+  }
 }
-
 
 
 
