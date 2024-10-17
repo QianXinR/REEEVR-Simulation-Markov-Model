@@ -79,7 +79,7 @@ generate_matrix <- function(n_states, uncertain_level) {
   mu <- initialize_mu(n_states*n_states)
   # Initialize a correlation matrix based on n_states
   corMatrix <- generate_cor_matrix(n_states*n_states)
-  corMatrix_normalised <- t(apply(corMatrix, 1, function(row) row / sum(row)))
+  # corMatrix_normalised <- t(apply(corMatrix, 1, function(row) row / sum(row)))
   
   # Initialize an empty n x n matrix filled with zeros
   mat <- matrix(0, n_states, n_states)

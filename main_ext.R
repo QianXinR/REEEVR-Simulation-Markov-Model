@@ -3,7 +3,7 @@
 rm(list=ls())
 # Load necessary libraries
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(readxl,BCEA,ggplot2,gtools,VGAM,mlmc,grid,Rcpp,doRNG,voi)
+pacman::p_load(readxl,BCEA,ggplot2,gtools,VGAM,mlmc,grid,Rcpp,doRNG,voi,simstudy, data.table, psych, digest, parallel)
 
 # Challenges and assumptions
 #' 1- The random numbers generate for drug costs are fairly close to each other, which might not be the case in real life
