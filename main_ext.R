@@ -365,26 +365,23 @@ run_evppi_simulation <- function(n_states_var){
 	}
 	
 	#set.seed(33)
-	tst_utility <- mlmc.test(EVPPI_utility_l_p, M=2, N=1024,
-	                         L=2, N0=128,
-	                         alpha=1, beta=3/2, gamma=1,
-	                         eps.v=c(60, 30, 15,7,3),
+	tst_utility <- mlmc.test(EVPPI_utility_l_p, N=1000,
+	                         L=4, N0=1000,
+	                         eps.v=c(60, 30, 15,7,3,1),
 	                         Lmin=2, Lmax=10)
 	utility_evppi_mlmc <- evpi$EVPI - tst_utility$P[5]
 
 	
-	tst_cost <- mlmc.test(EVPPI_utility_l_p, M=2, N=1024,
-	                         L=2, N0=128,
-	                         alpha=1, beta=3/2, gamma=1,
-	                         eps.v=c(60, 30, 15,7,3),
-	                         Lmin=2, Lmax=10)
+	tst_cost <- mlmc.test(EVPPI_cost_l_p, N=1000,
+	                      L=4, N0=1000,
+	                      eps.v=c(60, 30, 15,7,3,1),
+	                      Lmin=2, Lmax=10)
 	cost_evppi_mlmc <- evpi$EVPI - tst_cost$P[5]
 	
 	
-	tst_prob <- mlmc.test(EVPPI_prob_l_p, M=2, N=1024,
-	                      L=2, N0=128,
-	                      alpha=1, beta=3/2, gamma=1,
-	                      eps.v=c(60, 30, 15,7,3),
+	tst_prob <- mlmc.test(EVPPI_prob_l_p, N=1000,
+	                      L=4, N0=1000,
+	                      eps.v=c(60, 30, 15,7,3,1),
 	                      Lmin=2, Lmax=10)
 	prob_evppi_mlmc <- evpi$EVPI - tst_prob$P[5]
 	#############################################################################
