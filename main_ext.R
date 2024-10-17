@@ -57,11 +57,11 @@ run_evppi_simulation <- function(n_states_var){
 	state_utility_df <- generate_state_data(n_states, 1, "Utility", "descending")
 
 	# random states costs
-	state_costs_df <- generate_state_data(n_states, 100000,"Cost", "ascending" )
+	state_costs_df <- generate_state_data(n_states, 10000,"Cost", "ascending" )
 
 	# random drug costs per cycle
 	# Initialize empty vectors to store the drug costs and standard deviations
-	drug_costs <- runif(n_tx, min = 0, max = 10000)
+	drug_costs <- runif(n_tx, min = 0, max = 1000)
 	sd_drug_costs <- runif(n_tx, min = 0.1, max = 0.2) * drug_costs
 
 	treatment_costs_df <- data.frame(
