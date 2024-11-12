@@ -2,9 +2,9 @@
 # Develop a generic Markov model that can have any number of states and input parameters with varying level of correlation. 
 # Qian Xin October 2023
 
-generate_net_benefit <- function(input_parameters, n_tx, n_samples, n_cycles, n_states, threshold = 25000){
+generate_net_benefit <- function(input_parameters, n_tx, n_samples, n_cycles, n_states,tx_names, threshold = 25000){
   
-  transition_matrices <- generate_transition_matrices(input_parameters, n_samples, n_tx, n_states)
+  transition_matrices <- generate_transition_matrices(input_parameters, n_samples, n_tx, n_states,tx_names)
   #transition_matrices[1,2,,]
   # test
   #matrix_to_test <- transition_matrices[1, 1, , ]

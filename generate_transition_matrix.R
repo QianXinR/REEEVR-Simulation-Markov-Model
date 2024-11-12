@@ -3,7 +3,7 @@
 # Qian Xin October 2023
 
 # generate the transition matrices for each sample, each tx
-generate_transition_matrices <- function(input_parameters,n_samples,n_tx, n_states ) { # move this outside the function
+generate_transition_matrices <- function(input_parameters,n_samples,n_tx, n_states,tx_names ) { # move this outside the function
   # Create a 3-dimensional array to store the transition matrices
   # Dimensions: treatments x samples x states x states
   transition_matrices <- array(0, dim = c(n_tx, n_samples, n_states, n_states),

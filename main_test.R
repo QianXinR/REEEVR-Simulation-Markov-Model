@@ -36,11 +36,11 @@ transition_names <- generate_column_names(n_states)
 
 
 # wrap evppi calculation in a function for later parallel 
-run_evppi_simulation <- function(n_states_var, n_tx_var){
+run_evppi_simulation <- function(n_states, n_tx){
   
   # random states Utility
-  n_states = n_states_var
-  n_tx = n_tx_var
+  n_states = n_states
+  n_tx = n_tx
   state_utility_df <- generate_state_data(n_states, 1, "Utility", "descending")
   
   # random states costs
@@ -343,7 +343,7 @@ run_evppi_simulation <- function(n_states_var, n_tx_var){
   #set.seed(33)
   tst_utility <- mlmc.test(EVPPI_utility_l_p, N=1000,
                            L=4, N0=1000,
-                           eps.v=c(60, 30, 15,7,3,1),
+                           eps.v=c(60, 30, 15,7),
                            Lmin=2, Lmax=10,
                            alpha = 1,
                            beta = 1.5)
@@ -352,7 +352,7 @@ run_evppi_simulation <- function(n_states_var, n_tx_var){
   
   tst_cost <- mlmc.test(EVPPI_cost_l_p, N=1000,
                         L=4, N0=1000,
-                        eps.v=c(60, 30, 15,7,3,1),
+                        eps.v=c(60, 30, 15,7),
                         Lmin=2, Lmax=10,
                         alpha = 1,
                         beta = 1.5)
@@ -361,7 +361,7 @@ run_evppi_simulation <- function(n_states_var, n_tx_var){
   
   tst_prob <- mlmc.test(EVPPI_prob_l_p, N=1000,
                         L=4, N0=1000,
-                        eps.v=c(60, 30, 15,7,3,1),
+                        eps.v=c(60, 30, 15,7),
                         Lmin=2, Lmax=10,
                         alpha = 1,
                         beta = 1.5)
@@ -415,20 +415,31 @@ if (run_locally == FALSE) {
   library(digest)
   script_run_hash = digest(format(Sys.time(), "%Y%m%d%H%M%S") , algo = 'md5')
   library(parallel)
-  num_sims = 2000 # can be changed
-  save_window = 100
-  input_values <- rep(n_states, save_window)
+  num_sims = 5 # can be changed
+  save_window = 1
+  input_values <- rep(c(n_states,n_tx), save_window)
   num_cores <- detectCores() / 2 + 10 #number of CPU cores available on the machine
   num_cores_to_use <- min(42, num_cores, detectCores()) # capped the number of cores at 42 to avoid overloading the system
   
   for (n_states in 3:10) {
     # Loop through n_states from 3 to 10
-    for (n_tx in 2:10) {  # Inner loop for n_tx from 2 to 10
+    for (n_tx in 2:10) {
+      # Inner loop for n_tx from 2 to 10
       
       input_values <- rep(n_states, save_window)
       
       for (iteration in 1:ceiling(num_sims / save_window)) {
-        print(paste("Running for n_states =", n_states, "and n_tx =", n_tx, "using", num_cores_to_use, "cores"))
+        print(
+          paste(
+            "Running for n_states =",
+            n_states,
+            "and n_tx =",
+            n_tx,
+            "using",
+            num_cores_to_use,
+            "cores"
+          )
+        )
         
         c1 <- makeCluster(num_cores_to_use) # creates a cluster cores, allowing parallel execution on multiple CPU cores
         
@@ -457,7 +468,13 @@ if (run_locally == FALSE) {
         )
         clusterExport(c1, c('n_states'))
         clusterExport(c1,
-                      c("rdirichlet", 'rdiric', 'bcea', 'createInputs', 'evppi')) # n_states is defined as global var, not right, to be fixed
+                      c(
+                        "rdirichlet",
+                        'rdiric',
+                        'bcea',
+                        'createInputs',
+                        'evppi'
+                      )) # n_states is defined as global var, not right, to be fixed
         clusterExport(c1, c("run_evppi_simulation", 'input_values'))
         results <- parLapply(c1, input_values, run_evppi_simulation)
         
@@ -501,14 +518,16 @@ if (run_locally == FALSE) {
         stopCluster(c1)
         
       }
-    } }else {
-      for (n_states in 3:10) {
-        for (n_tx in 2:10) {
-          run_evppi_simulation(n_states, n_tx)  # run locally if run_locally is TRUE
-        }
-      }
     }
+  }
+} else {
+  for (n_states in 3:10) {
+    for (n_tx in 2:10) {
+      run_evppi_simulation(n_states, n_tx)  # run locally if run_locally is TRUE
+    }
+  }
 }
+
 
 
 

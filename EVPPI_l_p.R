@@ -81,5 +81,5 @@ EVPPI_l_p<-function(l,N, EVPPI_std_p = NULL)
   sum1[6] = sum1[6] + sum(Pf^2);
   sum1[7] = sum1[7] + M*N;
   
-  return(list(sums = sum1, cost = M * N))
+  return(list(sums = sum1[1:6], cost = sum1[7]))
 }

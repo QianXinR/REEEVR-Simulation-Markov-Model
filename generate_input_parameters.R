@@ -3,8 +3,9 @@
 # Qian Xin October 2023
 
 # Generate input parameters data with n_samples
-generate_input_parameters <- function(n_samples, treatment_costs_df, state_costs_df, state_utility_df,
-				 state_transition_matrices, hold_constant = c(), uncertain_level = 100) {
+generate_input_parameters <- function(n_samples, n_states, n_tx, treatment_costs_df, state_costs_df, state_utility_df,
+                                      state_transition_matrices,transition_names,state_names, tx_names,
+                                      n_columns,hold_constant = c(), uncertain_level = 100)  {
   
   input_parameters <- as.data.frame(matrix(nrow = n_samples, ncol = n_columns))
   colnames(input_parameters) <- c(transition_names,
